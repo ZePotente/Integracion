@@ -52,4 +52,32 @@ CONTAINS
         
         INTEGRAL_ROMBERG = T(0)
     END FUNCTION
+    
+    !---Condiciones sobre N para cada método---!
+    
+    FUNCTION COND_TRAPECIOS(N)
+        LOGICAL :: COND_TRAPECIOS
+        INTEGER, INTENT(IN) :: N
+        COND_TRAPECIOS = N >= 2
+    END FUNCTION
+    
+    FUNCTION COND_SIMPSON13(N)
+        LOGICAL :: COND_SIMPSON13
+        INTEGER, INTENT(IN) :: N
+        COND_SIMPSON13 = (MOD(N-2,2) == 1)    !n = 2k+1  con k > 0
+    END FUNCTION
+    
+    FUNCTION COND_SIMPSON38(N)
+        LOGICAL :: COND_SIMPSON38
+        INTEGER, INTENT(IN) :: N
+        COND_SIMPSON38 = (MOD(N-3,3) == 1)    !n = 3k+1  con k > 0
+    END FUNCTION
+    
+    FUNCTION COND_ROMBERG(N)
+        LOGICAL :: COND_ROMBERG
+        INTEGER, INTENT(IN) :: N
+        COND_ROMBERG = (N == 2 .OR. N == 3 .OR. N == 5 .OR. N == 9 .OR. N == 17 .OR. N == 33) !n = 2^k + 1, hardcodeado porque no tengo ganas de complicarme.
+    END FUNCTION
+    
+    
 END MODULE
