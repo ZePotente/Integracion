@@ -22,7 +22,34 @@ CONTAINS
         REAL(8), INTENT(IN) :: H, Y(:)
         INTEGER, INTENT(IN) :: N
         !
-        INTEGRAL_SIMPSON38 = (3./8.)*H* (Y(1) + 3*SUM(Y(2:N-3:3)) + 3*SUM(Y(3:N-2:3)) + 2*SUM(Y(4:N-1:3)) + Y(N))
+        REAL(8) :: SUMA
+        INTEGRAL_SIMPSON38 = (3./8.)*H* (Y(1) + 3*SUM(Y(2:N-3:3)) + 3*SUM(Y(3:N-2:3)) + 2*SUM(Y(4:N-4:3)) + Y(N))
+        
+        SUMA = CALCULAR(Y, N)
+        INTEGRAL_SIMPSON38 = (3./8.)*H* SUMA
+    END FUNCTION
+    
+    FUNCTION CALCULAR(Y, N)
+        REAL(8) :: CALCULAR
+        REAL(8), DIMENSION(:), INTENT(IN) :: Y
+        INTEGER, INTENT(IN) :: N
+        !
+        REAL(8) :: SUMA
+        INTEGER :: I
+        
+        SUMA = Y(1)
+        DO I = 1, (N-1)/3
+            SUMA = SUMA + 3.*Y(3*I-1) + 3.*Y(3*I)
+!            PRINT *, 'Y(2+3I)', Y(3*I-1)
+!            PRINT *, 'Y(3+3I)', Y(3*I)
+        END DO
+        
+        DO I = 1, ((N-1)/3) - 1
+            SUMA = SUMA + 2.*Y(3*I+1)
+!            PRINT *, 'Y(3I)', Y(3*I+1)
+        END DO
+        SUMA = SUMA + Y(N)
+        CALCULAR = SUMA
     END FUNCTION
     
     FUNCTION INTEGRAL_ROMBERG(Y, N, H)

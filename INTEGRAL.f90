@@ -19,11 +19,12 @@ PROGRAM INTEGRAL
     
     CALL MOSTRAR_DATOS(X, Y, H, N)
     PRINT *, 'Presione enter para avanzar al menu de opciones (Se borrará la pantalla).'
+    PRINT *, 'Recordatorio de verificar H en la funcion INTEG_CALC_H'
+    PRINT *, 'H = ', H
     READ(*,*)
     CALL SYSTEM("clear")
     30  PRINT *, 'N (cantidad de puntos) = ', N
         CALL MOSTRAR_MENU()
-        PRINT *, 'Recordatorio de verificar H en la funcion INTEG_CALC_H'
         READ(*,*) OPCION
         SELECT CASE (OPCION)
             CASE(1)
