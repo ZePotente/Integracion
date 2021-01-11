@@ -6,16 +6,23 @@ PROGRAM INTEGRAL
     IMPLICIT NONE
     INTEGER :: BANDERA !Global.
     INTEGER :: N, OPCION
-    REAL(8) :: H, VAL_INT
+    REAL(8) :: H, VAL_INT, VAL1, VAL2
     REAL(8), DIMENSION(:), ALLOCATABLE :: X, Y
     PRINT *, 'Leyendo los puntos dato.'
-    CALL LEER_VALORES(X, Y)
-    IF (BANDERA == 1) THEN; PRINT *, 'Error de lectura.'; GOTO 20; END IF;
+
+!    CALL LEER_VALORES(X, Y)
+!    IF (BANDERA == 1) THEN; PRINT *, 'Error de lectura.'; GOTO 20; END IF;
     
+    !
+    CALL ASD(X, Y)
+    PRINT *, 'X'
+    CALL VEC_MOSTRAR(X)
+    PRINT *, 'Y'
+    CALL VEC_MOSTRAR(Y)
+    !
     N = SIZE(Y)
     H = INTEG_CALC_H(X, N)
     IF (BANDERA == 1) GOTO 20
-    PRINT *, LOG(4.)/log(2.)
     
     CALL MOSTRAR_DATOS(X, Y, H, N)
     PRINT *, 'Presione enter para avanzar al menu de opciones (Se borrará la pantalla).'
@@ -31,6 +38,7 @@ PROGRAM INTEGRAL
                 IF (COND_TRAPECIOS(N)) THEN
                     VAL_INT = INTEGRAL_TRAPECIOS(Y, N, H)
                     CALL MOSTRAR_RESULTADO(VAL_INT)
+                    VAL1 = VAL_INT
                 ELSE
                     PRINT *, 'La cantidad de puntos no es la necesaria.'
                 END IF
@@ -38,6 +46,7 @@ PROGRAM INTEGRAL
                 IF (COND_SIMPSON13(N)) THEN
                     VAL_INT = INTEGRAL_SIMPSON13(Y, N, H)
                     CALL MOSTRAR_RESULTADO(VAL_INT)
+                    VAL2 = VAL_INT
                 ELSE
                     PRINT *, 'La cantidad de puntos no es la necesaria.'
                 END IF
@@ -63,6 +72,7 @@ PROGRAM INTEGRAL
         READ(*,*)
         CALL SYSTEM("clear")
     IF (OPCION /= 0) GOTO 30
+    WRITE(*,'(F15.8)') VAL1-VAL2
 20  PRINT *, 'Fin del programa.'
 CONTAINS
     SUBROUTINE LEER_VALORES(X,Y)
@@ -110,7 +120,7 @@ CONTAINS
     SUBROUTINE MOSTRAR_RESULTADO(RES)
         REAL(8), INTENT(IN) :: RES
         
-        WRITE(*,'(A, F15.7)') 'El resultado de la integral es: ', RES
+        WRITE(*,'(A, F15.8)') 'El resultado de la integral es: ', RES
     END SUBROUTINE
     
     FUNCTION INTEG_CALC_H(X, N)
@@ -127,4 +137,30 @@ CONTAINS
             PRINT *, 'Estás queriendo calcular la integral de un punto (o menos).'
         END IF
     END FUNCTION
+    
+    FUNCTION FUN(X)
+        REAL(8) :: FUN
+        REAL(8), INTENT(IN) :: X
+        !
+        REAL(8), PARAMETER :: PI = 3.14159265359
+        
+        FUN = 1./SQRT(2*PI) *EXP(-(X*X)/2.)
+    END FUNCTION
+    
+    SUBROUTINE ASD(X, Y)
+        REAL(8), DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: X, Y
+        !
+        REAL(8) :: XACT
+        INTEGER :: I, N
+        N = 13
+        ALLOCATE(X(N), Y(N))
+        H = 1./6.
+        XACT = -1.
+        DO I = 1, N
+            X(I) = XACT
+            Y(I) = FUN(XACT)
+            XACT = XACT + H
+        END DO
+    END SUBROUTINE
+    
 END PROGRAM

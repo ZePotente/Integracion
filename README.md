@@ -1,2 +1,2 @@
-# Integracion
-Compilar en orden correspondiente.
+# Integracion  
+Compilar moduloVyM, luego INTEGRAL_MET, y por último INTEGRAL.
