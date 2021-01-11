@@ -15,7 +15,7 @@ PROGRAM INTEGRAL
     N = SIZE(Y)
     H = INTEG_CALC_H(X, N)
     IF (BANDERA == 1) GOTO 20
-    PRINT *, LOG(4.)/log(2.)
+!    PRINT *, LOG(4.)/log(2.)
     
     CALL MOSTRAR_DATOS(X, Y, H, N)
     PRINT *, 'Presione enter para avanzar al menu de opciones (Se borrará la pantalla).'
